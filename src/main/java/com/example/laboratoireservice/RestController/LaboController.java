@@ -1,6 +1,6 @@
 package com.example.laboratoireservice.RestController;
 
-import com.example.laboratoireservice.MODEL.Equipe;
+import com.example.laboratoireservice.entities.Equipe;
 import com.example.laboratoireservice.entities.Axe;
 import com.example.laboratoireservice.entities.Labo;
 import com.example.laboratoireservice.feign.ChercheurRestCient;
@@ -81,7 +81,7 @@ public class LaboController
         return labo;
     }
 
-    @PutMapping("labo/addEquipe/{id}")
+    @PutMapping("addEquipe/{id}")
     public Labo addEquipe(@RequestBody Equipe equipe, @PathVariable long id) {
         Labo labo = laboRepository.findById(id).get();
         //Axe newAxe = axeRepository.findById(axe.getId()).get()

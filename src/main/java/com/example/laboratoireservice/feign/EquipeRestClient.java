@@ -1,7 +1,6 @@
 package com.example.laboratoireservice.feign;
 
-import com.example.laboratoireservice.MODEL.Chercheur;
-import com.example.laboratoireservice.MODEL.Equipe;
+import com.example.laboratoireservice.entities.Equipe;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.cloud.openfeign.FeignClient;
