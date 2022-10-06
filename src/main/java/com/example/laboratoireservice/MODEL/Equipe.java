@@ -1,4 +1,4 @@
-package com.example.laboratoireservice.entities;
+package com.example.laboratoireservice.MODEL;
 
 import com.example.laboratoireservice.entities.Axe;
 import com.example.laboratoireservice.entities.Labo;

@@ -13,7 +13,7 @@ public interface ChercheurRestCient {
     @GetMapping(path = "/chercheurs/{id}")
     public Chercheur getChercheurById(@PathVariable("id")Long id);
 
-    @GetMapping(path = "/getChercheur/{name}")
+    @GetMapping(path = "/getChercheurByName/{name}")
     Chercheur getChercheurByName(@PathVariable("name")String name);
     //@GetMapping(path = "/chercheur/{id}")
     //public List<Chercheur> getChercheurById(@PathVariable("id")Long id);
