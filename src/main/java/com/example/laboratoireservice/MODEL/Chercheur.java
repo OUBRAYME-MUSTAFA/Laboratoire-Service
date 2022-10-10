@@ -21,6 +21,7 @@ public class Chercheur {
     private Long id ;
     private String name;
     private String role;
-
+    @ManyToMany
+    private List<Labo> labo;
 
 }

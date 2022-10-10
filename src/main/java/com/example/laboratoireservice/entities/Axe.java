@@ -5,35 +5,52 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Axe {
+public class Axe  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String name;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany
-    private List<Labo> labo_list = new ArrayList<Labo>();
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "axes")
+    @JsonIgnore
+    private Set<Labo> labos = new HashSet<>();
 
     public void setAxeName(String name) {
         this.name = name;
     }
 
-    public void addEquipe( Labo labo){
-        labo_list.add(labo);
-    }
     public Axe(String name){
         this.name= name;
     }
 
 
+    public Set<Labo> getLabos() {
+        return  this.labos;
+    }
+
+    public void setLabos(Set<Labo> labos) {
+        this.labos = labos;
+    }
+    public void addLabos(Labo labo) {
+        this.labos.add(labo);
+        labo.getAxes().add(this);
+    }
 }
