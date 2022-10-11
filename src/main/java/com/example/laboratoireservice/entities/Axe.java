@@ -31,7 +31,16 @@ public class Axe  implements Serializable {
             },
             mappedBy = "axes")
     @JsonIgnore
-    private Set<Labo> labos = new HashSet<>();
+    private List<Labo> labos = new ArrayList<>();
+
+
+
+
+
+
+
+
+
 
     public void setAxeName(String name) {
         this.name = name;
@@ -42,11 +51,11 @@ public class Axe  implements Serializable {
     }
 
 
-    public Set<Labo> getLabos() {
+    public List<Labo> getLabos() {
         return  this.labos;
     }
 
-    public void setLabos(Set<Labo> labos) {
+    public void setLabos(List<Labo> labos) {
         this.labos = labos;
     }
     public void addLabos(Labo labo) {

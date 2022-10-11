@@ -6,10 +6,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-
 @FeignClient(name = "CHERCHEUR-SERVICE")
-public interface ChercheurRestCient {
+public interface ChercheurRestClient {
     @GetMapping(path = "/chercheurs/{id}")
     public Chercheur getChercheurById(@PathVariable("id")Long id);
 

@@ -43,12 +43,19 @@ public class Labo  implements Serializable {
             inverseJoinColumns = { @JoinColumn(name = "axe_id") })
     private List<Axe> axes = new ArrayList<>();
 
-    public List<Axe> getAxes() {
-        return axes;
-    }
 
-    @ManyToMany(mappedBy = "labo")
-    private Set<Chercheur> Member = new HashSet<Chercheur>();
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "laboratoire_member",
+            joinColumns = { @JoinColumn(name = "labo_id") },
+            inverseJoinColumns = { @JoinColumn(name = "member_id") })
+    private List<Chercheur> Member = new ArrayList<>();
+
+
+
 
 
     public Labo( Long id , String acro_labo, String intitule, Long responsableId) {
@@ -72,6 +79,9 @@ public class Labo  implements Serializable {
     public void addAxe(Axe axe) {
         this.axes.add(axe);
     }
+    public void addMember(Chercheur chercheur) {
+        this.Member.add(chercheur);
+    }
 
     public void removeAxe(long axeId) {
         Axe axe = this.axes.stream().filter(t -> t.getId() == axeId).findFirst().orElse(null);
@@ -84,11 +94,9 @@ public class Labo  implements Serializable {
         return this.equipes;
     }
 
-//    public void  addAxe_Labo(List axes){
-//        axes.forEach(pi->{
-//            this.axe_list.add((Axe) pi);
-//        });
-//    }
+
+
+
 
 
 

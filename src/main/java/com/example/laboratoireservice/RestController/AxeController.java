@@ -6,6 +6,7 @@ import com.example.laboratoireservice.repository.AxeRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class AxeController {
@@ -19,7 +20,12 @@ public class AxeController {
     @GetMapping(path = "/axes")
     public List<Axe> listAxes()
     {
-        return axeRepository.findAll();
+
+        List<Axe> list = axeRepository.findAll();
+        list.forEach(pi->{
+            pi.setLabos(null);
+        });
+        return list;
     }
 
     @PostMapping("addAxe")
