@@ -18,6 +18,7 @@ import java.util.*;
 
 @RestController
 @EnableFeignClients
+@CrossOrigin("http://localhost:4200/")
 public class LaboController
 {
 
