@@ -13,5 +13,7 @@ public interface AxeRepository extends JpaRepository<Axe, Long> {
     Axe findByName(String name);
     //Collection<Axe> findById(Long id);
     List<Axe> findAxessByLabosId(Long laboId);
+
+    List<Axe> searchByName(String name);
 }
 

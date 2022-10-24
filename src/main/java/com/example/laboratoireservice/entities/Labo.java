@@ -28,10 +28,10 @@ public class Labo  implements Serializable {
     private Chercheur responsable;
 
     @Transient
-    private  Set<Equipe> equipe = new HashSet<Equipe>();
+    private  Set<Equipe> equipes_object = new HashSet<Equipe>();
 
     @ElementCollection
-    private List<Long> equipes;
+    private Set<Long> equipes_ID = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -52,7 +52,7 @@ public class Labo  implements Serializable {
     @JoinTable(name = "laboratoire_member",
             joinColumns = { @JoinColumn(name = "labo_id") },
             inverseJoinColumns = { @JoinColumn(name = "member_id") })
-    private List<Chercheur> Member = new ArrayList<>();
+    private Set<Chercheur> Member = new HashSet<>();
 
 
 
@@ -90,8 +90,8 @@ public class Labo  implements Serializable {
             axe.getLabos().remove(this);
         }
     }
-    public List<Long> getEquipe_list(){
-        return this.equipes;
+    public Set<Long> getEquipesID(){
+        return this.equipes_ID;
     }
 
 

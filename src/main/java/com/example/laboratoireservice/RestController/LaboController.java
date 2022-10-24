@@ -18,7 +18,7 @@ import java.util.*;
 
 @RestController
 @EnableFeignClients
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("*")
 public class LaboController
 {
 
@@ -57,11 +57,29 @@ public class LaboController
         labo.getAxes().forEach(pi->{
             Axe axe = axeRepository.getAxeById(pi.getId());
             pi.setAxeName(axe.getName());
+            pi.setLabos(null);
         });
-        labo.getEquipe_list().forEach(pi->{
+        labo.getMember().forEach(ch->{
+            Chercheur chercheur1 = chercheurRestClient.getChercheurByName(ch.getName());
+            ch.setChercheurName(chercheur1.getName());
+            ch.setLabos(null);
+        });
+
+        labo.getEquipesID().forEach(pi->{
+            System.out.println("***************** equipe id = " +pi);
             Equipe equipe = equipeRestClient.getEquipeById(pi);
-            labo.getEquipe().add(equipe);
+            equipe.setLabo(null);
+            labo.getEquipes_object().add(equipe);
+
         });
+//        labo.getAxes().forEach(pi->{
+//            Axe axe = axeRepository.getAxeById(pi.getId());
+//            pi.setAxeName(axe.getName());
+//        });
+//        labo.getEquipesID().forEach(pi->{
+//            Equipe equipe = equipeRestClient.getEquipeById(pi);
+//            labo.getEquipes_object().add(equipe);
+//        });
 
         return labo;
     }
@@ -84,10 +102,19 @@ public class LaboController
                 ch.setLabos(null);
             });
 
-//            labo.getEquipe_list().forEach(pi->{
-//                Equipe equipe = equipeRestClient.getEquipeById(pi);
-//                labo.getEquipe().add(equipe);
-//            });
+            labo.getEquipesID().forEach(pi->{
+                System.out.println("***************** equipe id = " +pi);
+                Equipe equipe = equipeRestClient.getEquipeById(pi);
+                equipe.setLabo(null);
+                labo.getEquipes_object().add(equipe);
+
+            });
+
+            labo.getEquipes_object().forEach(ep->{
+
+                labo.getMember().addAll(ep.getMember());
+            });
+
 
         });
         return list__;
@@ -95,9 +122,10 @@ public class LaboController
 
 
 
+
 @PostMapping("addLabo")
 public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
-    Chercheur chercheur = chercheurRestClient.getChercheurByName(labo.getResponsable().getName());
+    Chercheur chercheur = chercheurRestClient.getChercheurById(labo.getResponsable().getId());
     Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),chercheur.getId());
     laboRepository.save(labo1);
     labo.getAxes().forEach(pi->{
@@ -109,7 +137,12 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
         System.out.println("********************** id = "+newChercheur.getId()+" // name = "+newChercheur.getName());
         addMember(newChercheur,labo1.getId());
     });
-
+    labo.getEquipes_object().forEach(ep->{
+        labo1.getEquipes_ID().add(ep.getId());
+        System.out.println("******* equipe : "+ep.getAcro_equipe()+" was saved ");
+        equipeRestClient.addLabo(labo1 , ep.getId());
+    });
+    laboRepository.save(labo1);
     return   new ResponseEntity<>(null, HttpStatus.CREATED);
 }
 //    @PostMapping("addLabo")
@@ -145,91 +178,47 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
 
     @PutMapping("labo/addMember/{id}")
     public Labo addMember(@RequestBody Chercheur chercheur, @PathVariable long id) {
-        Labo labo =  laboRepository.findById(id).get();
+      Labo labo =  laboRepository.findById(id).get();
+
+      try{
         labo.addMember(chercheur);
         laboRepository.save(labo);
-        return labo;
+        return getFullLabo(labo.getId());
+    } catch(Exception e){
+            return  null;
+          }
     }
 
     @PutMapping("addEquipe/{id}")
     public Labo addEquipe(@RequestBody Equipe equipe, @PathVariable long id) {
         Labo labo = laboRepository.findById(id).get();
         //Axe newAxe = axeRepository.findById(axe.getId()).get()
-
-       labo.getEquipe_list().add(equipe.getId());
+       labo.getEquipes_ID().add(equipe.getId());
 
        laboRepository.save(labo);
+      // equipeRestClient.addLabo(labo,equipe.getId());
         return labo;
     }
 
     @DeleteMapping(path = "/labos/{code}")
     public void deleteLabo(@PathVariable (name = "code") long code ) {
-
+        Labo labo = laboRepository.findById(code).get();
+        labo.getEquipes_ID().forEach(id->{
+            equipeRestClient.deleteLabo(id);
+        });
         laboRepository.deleteById(code);
+}
+
+    @PutMapping(path = "/labos/{id}/deleteEquipe/{code}")
+    public void deleteEquipe(@PathVariable (name = "id") long id , @PathVariable (name = "code") long code ) {
+
+        Labo labo = laboRepository.findById(id).get();
+
+        labo.getEquipes_ID().remove(code);
+        laboRepository.save(labo);
+
     }
 
-    //===================================================================================================================================================================
-//
-//    @GetMapping("/tutorials")
-//    public ResponseEntity<List<Labo>> getAllTutorials() {
-//        List<Labo> labos = new ArrayList<Labo>();
-//
-//
-//            laboRepository.findAll().forEach(labos::add);
-//
-//
-//        if (labos.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//
-//        return new ResponseEntity<>(labos, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/tutorials/{id}")
-//    public ResponseEntity<Labo> getTutorialById(@PathVariable("id") long id) {
-//        Labo labo = laboRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Not found Labo with id = " + id));
-//
-//        return new ResponseEntity<>(labo, HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/tutorials")
-//    public ResponseEntity<Labo> createTutorial(@RequestBody Labo labo) {
-//        Labo _labo = laboRepository.save(new Labo(labo.getAcro_labo(), labo.getIntitule(), labo.getResponsable().getId()));
-//        return new ResponseEntity<>(_labo, HttpStatus.CREATED);
-//    }
-//
-//    @PutMapping("/tutorials/{id}")
-//    public ResponseEntity<Labo> updateTutorial(@PathVariable("id") long id, @RequestBody Labo tutorial) {
-//        Labo _labo = laboRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Not found Labo with id = " + id));
-//
-//
-//
-//        return new ResponseEntity<>(laboRepository.save(_labo), HttpStatus.OK);
-//    }
-//
-//
-//    @PostMapping("a")
-//    public ResponseEntity<Labo> addTag(@PathVariable(value = "axeId") Long axeId, @RequestBody Labo laboRequest) {
-//        Labo labo = axeRepository.findById(axeId).map(axe -> {
-//            long laboId = laboRequest.getId();
-//
-//            // labo is existed
-////            if (laboId != 0L) {
-////                Tag _tag = tagRepository.findById(tagId)
-////                        .orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = " + tagId));
-////                tutorial.addTag(_tag);
-////                tutorialRepository.save(tutorial);
-////                return _tag;
-////            }
-//
-//            // add and create new Tag
-//            axe.addLabos(laboRequest);
-//            return laboRepository.save(laboRequest);
-//        }).orElseThrow(() -> new ResourceNotFoundException("Not found Axe with id = " + axeId));
-//
-//        return new ResponseEntity<>(labo, HttpStatus.CREATED);
-//    }
+
 
 }

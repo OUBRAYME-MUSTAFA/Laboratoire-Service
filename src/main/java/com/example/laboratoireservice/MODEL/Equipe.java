@@ -11,30 +11,31 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Equipe {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String acro_equipe;
-    private String Intitule;
-    private String responsable;
-    @ManyToMany
-    private List<Axe> axe_list = new ArrayList<Axe>();
+    private String intitule;
+    private Chercheur responsable;
+    @Transient
+    private List<Axe> axes = new ArrayList<Axe>();
+    private List<Chercheur> member = new ArrayList<>();
     @ManyToOne
     private Labo labo;
+    private long laboID;
 
     public void addAxe( Axe axe){
-        axe_list.add(axe);
+        axes.add(axe);
     }
 
-    public Equipe(String acro_equipe,String Intitule,String  responsable){
+    public Equipe(String acro_equipe,String Intitule,Chercheur  responsable){
         this.acro_equipe= acro_equipe;
-        this.Intitule= Intitule;
+        this.intitule= Intitule;
         this.responsable= responsable;
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin("http://localhost:4200/")
 public class AxeController {
 
     private AxeRepository axeRepository;
@@ -27,7 +28,18 @@ public class AxeController {
         });
         return list;
     }
-
+    @GetMapping(path = "/axes/{id}")
+    public Axe listAxes(@PathVariable(name = "id") Long  id)
+    {
+        Axe newAxe =  axeRepository.findById(id).get();
+        newAxe.setLabos(null);
+        return newAxe;
+    }
+    @GetMapping(path = "/getAxeByName/{name}")
+    public Axe findByName(@PathVariable(name = "name") String  name)
+    {
+        return axeRepository.findByName(name);
+    }
     @PostMapping("addAxe")
     public Axe addLabo(@RequestBody Axe axe ){
 

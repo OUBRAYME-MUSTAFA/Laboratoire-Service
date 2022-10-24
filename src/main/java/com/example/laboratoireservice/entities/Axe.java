@@ -20,7 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class Axe  implements Serializable {
-    @Id
+    @javax.persistence.Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String name;

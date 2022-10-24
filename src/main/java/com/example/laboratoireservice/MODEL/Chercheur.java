@@ -18,7 +18,6 @@ import java.util.List;
 @ToString
 public class Chercheur {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String name;
     private String role;
