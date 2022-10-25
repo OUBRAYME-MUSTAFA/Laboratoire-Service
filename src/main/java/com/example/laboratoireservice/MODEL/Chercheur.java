@@ -26,7 +26,7 @@ public class Chercheur {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             },
-            mappedBy = "Member")
+            mappedBy = "member")
     @JsonIgnore
     private List<Labo> labos;
 

@@ -52,7 +52,7 @@ public class Labo  implements Serializable {
     @JoinTable(name = "laboratoire_member",
             joinColumns = { @JoinColumn(name = "labo_id") },
             inverseJoinColumns = { @JoinColumn(name = "member_id") })
-    private Set<Chercheur> Member = new HashSet<>();
+    private Set<Chercheur> member = new HashSet<>();
 
 
 
@@ -80,7 +80,7 @@ public class Labo  implements Serializable {
         this.axes.add(axe);
     }
     public void addMember(Chercheur chercheur) {
-        this.Member.add(chercheur);
+        this.member.add(chercheur);
     }
 
     public void removeAxe(long axeId) {
