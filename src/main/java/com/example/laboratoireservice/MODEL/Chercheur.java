@@ -12,15 +12,15 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Data @NoArgsConstructor @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "TYPE" ,length = 4)
 public class Chercheur {
     @Id
     private Long id ;
-    private String name;
-    private String role;
+    private String nom;
+    private String prenom ;
+
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -35,7 +35,5 @@ public class Chercheur {
         labo.getMember().add(this);
     }
 
-    public void setChercheurName(String name) {
-        this.name =name;
-    }
+
 }

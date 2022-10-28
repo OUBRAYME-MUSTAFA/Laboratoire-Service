@@ -60,8 +60,10 @@ public class LaboController
             pi.setLabos(null);
         });
         labo.getMember().forEach(ch->{
-            Chercheur chercheur1 = chercheurRestClient.getChercheurByName(ch.getName());
-            ch.setChercheurName(chercheur1.getName());
+            Chercheur chercheur1 = chercheurRestClient.getChercheurById(ch.getId());
+            ch.setNom(chercheur1.getNom());
+            ch.setPrenom(chercheur1.getPrenom());
+
             ch.setLabos(null);
         });
 
@@ -92,6 +94,7 @@ public class LaboController
 
         list__.forEach(labo -> {
             Chercheur chercheur = chercheurRestClient.getChercheurById(labo.getResponsableId());
+            chercheur.setId(labo.getResponsableId());
             labo.setResponsable(chercheur);
           //  mList.addAll(labo.getMember());
             labo.getAxes().forEach(pi->{
@@ -100,8 +103,9 @@ public class LaboController
                 pi.setLabos(null);
             });
             labo.getMember().forEach(ch->{
-                Chercheur chercheur1 = chercheurRestClient.getChercheurByName(ch.getName());
-                ch.setChercheurName(chercheur1.getName());
+                Chercheur chercheur1 = chercheurRestClient.getChercheurById(ch.getId());
+                ch.setNom(chercheur1.getNom());
+                ch.setPrenom(chercheur1.getPrenom());
                 ch.setLabos(null);
             });
 
@@ -139,7 +143,9 @@ public List IdsMemberLabo(Labo labo )
 @PostMapping("addLabo")
 public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
     Chercheur chercheur = chercheurRestClient.getChercheurById(labo.getResponsable().getId());
-    Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),chercheur.getId());
+    chercheur.setId(labo.getResponsableId());
+    System.out.println("we sent id = "+labo.getResponsable().getId()+"************* we get chercheur id = "+chercheur.getId());
+    Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),labo.getResponsable().getId());
     laboRepository.save(labo1);
     labo.getAxes().forEach(pi->{
         System.out.println("********************** axes process is beging" );
@@ -151,6 +157,7 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
     labo.getMember().forEach(member->{
         System.out.println("********************** members process is beging" );
         Chercheur newChercheur =chercheurRestClient.getChercheurById(member.getId());
+        newChercheur.setId(member.getId());
         addMember(newChercheur,labo1.getId());
         System.out.println("********************** members process is end" );
 
