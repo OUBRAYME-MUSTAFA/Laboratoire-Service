@@ -13,8 +13,6 @@ import java.util.List;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "TYPE" ,length = 4)
 public class Chercheur {
     @Id
     private Long id ;
