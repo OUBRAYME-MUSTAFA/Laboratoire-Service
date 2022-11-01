@@ -68,10 +68,12 @@ public class LaboController
         });
 
         labo.getEquipesID().forEach(pi->{
-            System.out.println("***************** equipe id = " +pi);
+
             Equipe equipe = equipeRestClient.getEquipeById(pi);
-            equipe.setLabo(null);
-            labo.getEquipes_object().add(equipe);
+            if(equipe.getLaboID() == labo.getId()) {
+                equipe.setLabo(null);
+                labo.getEquipes_object().add(equipe);
+            }
 
         });
 //        labo.getAxes().forEach(pi->{
@@ -110,10 +112,11 @@ public class LaboController
             });
 
             labo.getEquipesID().forEach(pi->{
-                System.out.println("***************** equipe id = " +pi);
                 Equipe equipe = equipeRestClient.getEquipeById(pi);
-                equipe.setLabo(null);
-                labo.getEquipes_object().add(equipe);
+                if(equipe.getLaboID() == labo.getId()) {
+                    equipe.setLabo(null);
+                    labo.getEquipes_object().add(equipe);
+                }
 
             });
 
