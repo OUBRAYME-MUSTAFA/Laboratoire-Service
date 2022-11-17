@@ -147,52 +147,28 @@ public List IdsMemberLabo(Labo labo )
 public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
     Chercheur chercheur = chercheurRestClient.getChercheurById(labo.getResponsable().getId());
     chercheur.setId(labo.getResponsableId());
-    System.out.println("we sent id = "+labo.getResponsable().getId()+"************* we get chercheur id = "+chercheur.getId());
     Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),labo.getResponsable().getId());
     laboRepository.save(labo1);
     labo.getAxes().forEach(pi->{
-        System.out.println("********************** axes process is beging" );
-
         addAxe(axeRepository.findById(pi.getId()).get(),labo1.getId());
-        System.out.println("********************** axes process is end" );
-
     });
     labo.getMember().forEach(member->{
-        System.out.println("********************** members process is beging" );
         Chercheur newChercheur =chercheurRestClient.getChercheurById(member.getId());
         newChercheur.setId(member.getId());
         addMember(newChercheur,labo1.getId());
-        System.out.println("********************** members process is end" );
-
     });
     labo.getEquipes_object().forEach(ep->{
         addEquipe(ep , labo1.getId());
-//        labo1.getEquipes_ID().add(ep.getId());
-//        System.out.println("******* equipe : "+ep.getAcro_equipe()+" was saved ");
-//        equipeRestClient.addLabo(labo1 , ep.getId());
-//        laboRepository.save(labo1);
+
     });
     return   new ResponseEntity<>(null, HttpStatus.CREATED);
 }
-//    @PostMapping("addLabo")
-//    public Labo addLabo(@RequestBody Labo labo){
-//        Chercheur chercheur = chercheurRestClient.getChercheurByName(labo.getResponsable().getName());
-//        Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),chercheur.getId());
-//        laboRepository.save(labo1);
-//        labo.getAxes().forEach(pi->{
-//            addAxe(axeRepository.findById(pi.getId()).get(),labo1.getId());
-//
-//        });
-//        return   labo;
-//    }
+
 
 
 
     @PutMapping("update")
     public ResponseEntity<Labo> updateLabo(@RequestBody Labo labo){
-//        Chercheur chercheur = chercheurRestClient.getChercheurByName(labo.getResponsable().getName());
-//        labo.setResponsableId(chercheur.getId());
-//        return laboRepository.save(labo);
         return addLabo(labo);
 
     }
@@ -218,12 +194,9 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
     @PutMapping("addEquipe/{id}")
     public Labo addEquipe(@RequestBody Equipe equipe, @PathVariable long id) {
         Labo labo = laboRepository.findById(id).get();
-        //Axe newAxe = axeRepository.findById(axe.getId()).get()
        labo.getEquipes_ID().add(equipe.getId());
         equipeRestClient.addLabo(labo , equipe.getId());
-
        laboRepository.save(labo);
-      // equipeRestClient.addLabo(labo,equipe.getId());
         return getFullLabo(labo.getId());
     }
 
