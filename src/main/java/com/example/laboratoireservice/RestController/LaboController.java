@@ -195,7 +195,7 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
     public Labo addEquipe(@RequestBody Equipe equipe, @PathVariable long id) {
         Labo labo = laboRepository.findById(id).get();
        labo.getEquipes_ID().add(equipe.getId());
-        equipeRestClient.addLabo(labo , equipe.getId());
+       // equipeRestClient.addLabo(labo , equipe.getId());
        laboRepository.save(labo);
         return getFullLabo(labo.getId());
     }
