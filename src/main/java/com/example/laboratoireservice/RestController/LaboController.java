@@ -76,14 +76,6 @@ public class LaboController
             }
 
         });
-//        labo.getAxes().forEach(pi->{
-//            Axe axe = axeRepository.getAxeById(pi.getId());
-//            pi.setAxeName(axe.getName());
-//        });
-//        labo.getEquipesID().forEach(pi->{
-//            Equipe equipe = equipeRestClient.getEquipeById(pi);
-//            labo.getEquipes_object().add(equipe);
-//        });
 
         return labo;
     }
@@ -144,7 +136,12 @@ public List IdsMemberLabo(Labo labo )
 
 
 @PostMapping("addLabo")
-public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
+public ResponseEntity<Object> addLabo(@RequestBody Labo labo){
+    if(labo.getResponsable() == null){
+        System.out.println("il faut choisir un responsable  avant la creation de ce Labo : "+labo.getAcro_labo());
+        return  new ResponseEntity<>("il faut choisir un responsable  avant la creation " +
+                "de ce Labo "+labo.getAcro_labo(), HttpStatus.BAD_REQUEST);
+    }
     Chercheur chercheur = chercheurRestClient.getChercheurById(labo.getResponsable().getId());
     chercheur.setId(labo.getResponsableId());
     Labo labo1 =new Labo(labo.getId(),labo.getAcro_labo(), labo.getIntitule(),labo.getResponsable().getId());
@@ -168,7 +165,7 @@ public ResponseEntity<Labo> addLabo(@RequestBody Labo labo){
 
 
     @PutMapping("update")
-    public ResponseEntity<Labo> updateLabo(@RequestBody Labo labo){
+    public ResponseEntity<Object> updateLabo(@RequestBody Labo labo){
         return addLabo(labo);
 
     }
