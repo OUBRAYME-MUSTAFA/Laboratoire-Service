@@ -1,7 +1,7 @@
 package com.example.laboratoireservice.MODEL;
 
 import com.example.laboratoireservice.entities.Labo;
-import com.example.laboratoireservice.enums.RoleType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

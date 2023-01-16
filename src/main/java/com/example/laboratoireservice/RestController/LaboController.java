@@ -133,7 +133,14 @@ public List IdsMemberLabo(Labo labo )
     });
     return ids;
 }
-
+//    public List IdsAxeLabo(Labo labo )
+//    {
+//        List ids = new ArrayList<>();
+//        labo.getAxes().forEach(mem ->{
+//            ids.add(mem.getId());
+//        });
+//        return ids;
+//    }
 
 @PostMapping("addLabo")
 public ResponseEntity<Object> addLabo(@RequestBody Labo labo){
