@@ -28,7 +28,7 @@ public class AxeController {
         });
         return list;
     }
-    @GetMapping(path = "/axes/{id}")
+    @GetMapping(path = "/axe/{id}")
     public Axe listAxes(@PathVariable(name = "id") Long  id)
     {
         Axe newAxe =  axeRepository.findById(id).get();
